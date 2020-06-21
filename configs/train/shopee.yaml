@@ -1,12 +1,14 @@
 id: Baseline
 pretrained: null
+seed: 3698
 model:
     name: BaselineClassifier
     args:
         nclasses: 42
-        extractor:
+        extractor_cfg:
             name: ResNetExtractor
             args:
+                version: resnet18
 optimizer:
     name: Adam
     args:
@@ -25,7 +27,8 @@ dataset:
     train:
         name: ShopeeDataset
         args:
-            root: data/shopee #...
+            img_dir: data/shopee-product-detection-dataset/train/train
+            csv_path: data/shopee-product-detection-dataset/train_train.csv
             is_train: True
         loader:
             name: DataLoader
@@ -35,7 +38,8 @@ dataset:
     val:
         name: ShopeeDataset
         args:
-            root: <argument value>
+            img_dir: data/shopee-product-detection-dataset/train/train
+            csv_path: data/shopee-product-detection-dataset/train_val.csv
             is_train: False
         loader:
             name: DataLoader

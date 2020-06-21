@@ -2,15 +2,17 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from utils.getter import get_instance
+from utils import getter
+
 
 class BaselineClassifier(nn.Module):
     def __init__(self, extractor_cfg, nclasses):
+        super().__init__()
         self.nclasses = nclasses
-        self.extractor = get_instance(extractor_cfg)
-        self.feature_dims = self.extractor.feature_dims
-        self.classifier = nn.Linear(self.feature_dims, self.nclasses)
+        self.extractor = getter.get_instance(extractor_cfg)
+        self.feature_dim = self.extractor.feature_dim
+        self.classifier = nn.Linear(self.feature_dim, self.nclasses)
 
     def forward(self, x):
         x = self.extractor(x)
-        return self.classifier()
+        return self.classifier(x)

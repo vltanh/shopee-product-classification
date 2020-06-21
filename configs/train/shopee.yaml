@@ -1,0 +1,47 @@
+id: Baseline
+pretrained: null
+model:
+    name: BaselineClassifier
+    args:
+        nclasses: 42
+        extractor:
+            name: ResNetExtractor
+            args:
+optimizer:
+    name: Adam
+    args:
+loss:
+    name: CrossEntropyLoss
+    args:
+metric:
+    - name: Accuracy
+      args:
+scheduler:
+    name: ReduceLROnPlateau
+    args:
+        patience: 5
+        #rate: 0.5
+dataset:
+    train:
+        name: ShopeeDataset
+        args:
+            root: data/shopee #...
+            is_train: True
+        loader:
+            name: DataLoader
+            args:
+                shuffle: True
+                batch_size: 64
+    val:
+        name: ShopeeDataset
+        args:
+            root: <argument value>
+            is_train: False
+        loader:
+            name: DataLoader
+            args:
+                batch_size: 128
+trainer:
+    nepochs: 200
+    val_step: 1
+    log_step: 1

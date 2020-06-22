@@ -2,10 +2,16 @@
 
 ## Prepare data
 
-1. `mkdir data`
-2. Download the data ([Link 1](https://drive.google.com/drive/folders/1V_sHZN2MmhcfeVao3hoJpjRWLSnm1_Pe), [Link 2](https://drive.google.com/drive/folders/1PIJHZ6QXU5rjskT7dIimyEUdQJ84YvoR))
-3. Extract the zip into the newly created `data`
-4. `python split.py -csv data/shopee-product-detection-dataset/train.csv -out data/shopee-product-detection-dataset/`
+
+Data: [Link 1](https://drive.google.com/drive/folders/1V_sHZN2MmhcfeVao3hoJpjRWLSnm1_Pe), [Link 2](https://drive.google.com/drive/folders/1PIJHZ6QXU5rjskT7dIimyEUdQJ84YvoR)
+
+To split `train.csv` into train/val splits:
+
+```
+python split.py -csv data/shopee-product-detection-dataset/train.csv -out data/shopee-product-detection-dataset/
+```
+
+Or use the splits in `data/list`.
 
 ## Train
 

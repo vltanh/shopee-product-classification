@@ -21,3 +21,19 @@ Use Tensorboard on the `runs` directory (auto generated) to monitor the training
     tensorboard --logdir runs --port 3698
 ```
 and view Tensorboard at `localhost:3698` (on your web browser).
+
+## Evaluate
+
+Run:
+
+```
+    python val.py -g 0 -d data/shopee-product-detection-dataset/train/train -c data/list/train_val.csv -w backup/baseline/best_metric_Accuracy.pth
+```
+
+## Test
+
+Run:
+
+```
+    python test.py -d data/shopee-product-detection-dataset/test/test -w backup/baseline/best_metric_Accuracy.pth -g 0
+```

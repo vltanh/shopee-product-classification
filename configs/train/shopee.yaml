@@ -8,7 +8,7 @@ model:
         extractor_cfg:
             name: ResNetExtractor
             args:
-                version: resnet18
+                version: resnet50
 optimizer:
     name: Adam
     args:
@@ -21,25 +21,27 @@ metric:
 scheduler:
     name: ReduceLROnPlateau
     args:
+        mode: min
+        factor: 0.5
         patience: 5
-        #rate: 0.5
+        verbose: True
 dataset:
     train:
         name: ShopeeDataset
         args:
             img_dir: data/shopee-product-detection-dataset/train/train
-            csv_path: data/shopee-product-detection-dataset/train_train.csv
+            csv_path: data/list/train_train.csv
             is_train: True
         loader:
             name: DataLoader
             args:
                 shuffle: True
-                batch_size: 64
+                batch_size: 128
     val:
         name: ShopeeDataset
         args:
             img_dir: data/shopee-product-detection-dataset/train/train
-            csv_path: data/shopee-product-detection-dataset/train_val.csv
+            csv_path: data/list/train_val.csv
             is_train: False
         loader:
             name: DataLoader

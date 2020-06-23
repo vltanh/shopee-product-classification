@@ -51,3 +51,4 @@ trainer:
     nepochs: 200
     val_step: 1
     log_step: 1
+    runs: runs

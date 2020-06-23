@@ -37,6 +37,7 @@ class Trainer():
         self.nepochs = self.config['trainer']['nepochs']
         self.log_step = self.config['trainer']['log_step']
         self.val_step = self.config['trainer']['val_step']
+        self.runs_dir = self.config['trainer']['runs']
         self.debug = self.config['debug']
 
         # Instantiate global variables
@@ -46,7 +47,7 @@ class Trainer():
         self.val_metric = {k: list() for k in self.metric.keys()}
 
         # Instantiate loggers
-        self.save_dir = os.path.join('runs', self.train_id)
+        self.save_dir = os.path.join(self.runs_dir, self.train_id)
         self.tsboard = TensorboardLogger(path=self.save_dir)
 
     def save_checkpoint(self, epoch, val_loss, val_metric):

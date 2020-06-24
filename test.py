@@ -22,6 +22,8 @@ parser.add_argument('-b', type=int, default=64,
                     help='batch size (default: 64)')
 parser.add_argument('-o', type=str, default='test.csv',
                     help='output file (default: test.csv)')
+parser.add_argument('-c', action='store_true',
+                    help='export confident field')
 args = parser.parse_args()
 
 # Device
@@ -46,13 +48,20 @@ dataset = ImageFolderDataset(args.d, tfs)
 dataloader = DataLoader(dataset, batch_size=args.b)
 
 with torch.no_grad():
-    out = [('filename', 'prediction', 'confidence')]
+    if args.c:
+        out = [('filename', 'category', 'confidence')]
+    else:
+        out = [('filename', 'category')]
     model.eval()
     for i, (imgs, fns) in enumerate(tqdm(dataloader)):
         imgs = move_to(imgs, device)
         logits = model(imgs)
         probs = F.softmax(logits, dim=1)
         confs, preds = torch.max(probs, dim=1)
-        out.extend([(fn, pred.item(), conf.item())
-                    for fn, pred, conf in zip(fns, preds, confs)])
+        if args.c:
+            out.extend([(fn, pred.item(), conf.item())
+                        for fn, pred, conf in zip(fns, preds, confs)])
+        else:
+            out.extend([(fn, pred.item())
+                        for fn, pred in zip(fns, preds)])
     csv.writer(open(args.o, 'w')).writerows(out)

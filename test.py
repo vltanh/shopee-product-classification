@@ -20,10 +20,12 @@ parser.add_argument('-g', type=int, default=None,
                     help='(single) GPU to use (default: None)')
 parser.add_argument('-b', type=int, default=64,
                     help='batch size (default: 64)')
-parser.add_argument('-o', type=str, default='test.csv',
-                    help='output file (default: test.csv)')
-parser.add_argument('-c', action='store_true',
+parser.add_argument('-c', type=str, default='',
+                    help='raw csv file (default: empty)')
+parser.add_argument('-p', action='store_true',
                     help='export confident field')
+parser.add_argument('-o', type=str, default='output.csv',
+                    help='output file (default: output.csv)')
 args = parser.parse_args()
 
 # Device
@@ -47,8 +49,15 @@ tfs = tvtf.Compose([
 dataset = ImageFolderDataset(args.d, tfs)
 dataloader = DataLoader(dataset, batch_size=args.b)
 
+if args.c != '':
+    reader = csv.DictReader(open(args.c, 'r'))
+    data = list(reader)
+    list_img = {}
+    for i, row in enumerate(data):
+        list_img[row['filename']] = i
+
 with torch.no_grad():
-    if args.c:
+    if args.p:
         out = [('filename', 'category', 'confidence')]
     else:
         out = [('filename', 'category')]
@@ -58,10 +67,15 @@ with torch.no_grad():
         logits = model(imgs)
         probs = F.softmax(logits, dim=1)
         confs, preds = torch.max(probs, dim=1)
-        if args.c:
-            out.extend([(fn, pred.item(), conf.item())
-                        for fn, pred, conf in zip(fns, preds, confs)])
+        if args.p:
+            for fn, pred, conf in zip(fns, preds, confs):
+                if args.c == '' or (fn in list_img):
+                    out.append((fn, f'{pred.item():02d}', conf.item()))
         else:
-            out.extend([(fn, pred.item())
-                        for fn, pred in zip(fns, preds)])
+            for fn, pred in zip(fns, preds):
+                if args.c == '' or (fn in list_img):
+                    out.append((fn, f'{pred.item():02d}'))
+
+    if args.c != '':
+        out[1:] = sorted(out[1:], key=lambda x: list_img[x[0]])
     csv.writer(open(args.o, 'w')).writerows(out)

@@ -2,6 +2,8 @@ import torchvision.transforms as tvtf
 from torch.utils import data
 from PIL import Image
 
+from autoaugment import ImageNetPolicy
+
 import csv
 import os
 
@@ -16,7 +18,9 @@ class ShopeeDataset(data.Dataset):
 
         if is_train:
             self.transforms = tvtf.Compose([
-                tvtf.Resize((224, 224)),
+                tvtf.RandomResizedCrop(224),
+                tvtf.RandomHorizontalFlip(),
+                ImageNetPolicy(), 
                 tvtf.ToTensor(),
                 tvtf.Normalize(mean=[0.485, 0.456, 0.406],
                                std=[0.229, 0.224, 0.225]),

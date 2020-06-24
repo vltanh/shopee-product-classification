@@ -2,7 +2,7 @@ import torchvision.transforms as tvtf
 from torch.utils import data
 from PIL import Image
 
-from autoaugment import ImageNetPolicy
+from .autoaugment import ImageNetPolicy
 
 import csv
 import os

@@ -12,6 +12,8 @@ parser.add_argument('-c', type=str,
                     help='path to csv file')
 parser.add_argument('-o', type=str, default='output',
                     help='output folder (default: output)')
+parser.add_argument('-s', action='store_true',
+                    help='divide into subfolders')
 args = parser.parse_args()
 
 reader = csv.DictReader(open(args.c, 'r'))
@@ -25,7 +27,7 @@ categories = []
 for row in tqdm(data):
     filename, category = row['filename'], row['category']
 
-    if category not in categories:
+    if args.s and category not in categories:
         os.mkdir(os.path.join(args.o, category))
         categories.append(category)
 
@@ -33,6 +35,9 @@ for row in tqdm(data):
         input_dir = os.path.join(args.d, category, filename)
     else:
         input_dir = os.path.join(args.d, filename)
-    output_dir = os.path.join(args.o, category, filename)
+    if args.s:
+        output_dir = os.path.join(args.o, category, filename)
+    else:
+        output_dir = os.path.join(args.o, filename)
 
     shutil.copy2(input_dir, output_dir)

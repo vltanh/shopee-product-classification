@@ -2,9 +2,10 @@ id: Baseline
 pretrained: null
 seed: 3698
 model:
-    name: BaselineClassifier
+    name: BaselineWithLinear
     args:
         nclasses: 42
+        hidden_dim: 512
         extractor_cfg:
             name: ResNetExtractor
             args:
@@ -36,7 +37,7 @@ dataset:
             name: DataLoader
             args:
                 shuffle: True
-                batch_size: 128
+                batch_size: 16
     val:
         name: ShopeeDataset
         args:

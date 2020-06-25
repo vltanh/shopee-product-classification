@@ -41,5 +41,5 @@ Run:
 Run:
 
 ```
-    python test.py -d data/shopee-product-detection-dataset/test/test -w backup/baseline/best_metric_Accuracy.pth -g 0
+    python test.py -d data/shopee-product-detection-dataset/test/test -w backup/baseline/best_metric_Accuracy.pth -c data/shopee-product-detection-dataset/test.csv -g 0
 ```

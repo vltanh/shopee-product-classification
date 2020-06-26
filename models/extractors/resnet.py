@@ -12,6 +12,8 @@ class ResNetExtractor(ExtractorNetwork):
         'resnet50': models.resnet50,
         'resnet101': models.resnet101,
         'resnet152': models.resnet152,
+        'wide_resnet50_2': models.wide_resnet50_2,
+        'wide_resnet101_2': models.wide_resnet101_2,
     }
 
     def __init__(self, version):

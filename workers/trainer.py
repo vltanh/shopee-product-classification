@@ -68,7 +68,7 @@ class Trainer():
         else:
             print(f'Loss is not improved from {self.best_loss:.6f}.')
 
-        for k in self.metric.keys():
+        for k in val_metric.keys():
             if val_metric[k] > self.best_metric[k]:
                 print(
                     f'{k} is improved from {self.best_metric[k]: .6f} to {val_metric[k]: .6f}. Saving weights...')
@@ -76,8 +76,7 @@ class Trainer():
                     self.save_dir, f'best_metric_{k}.pth'))
                 self.best_metric[k] = val_metric[k]
             else:
-                print(
-                    f'{k} is not improved from {self.best_metric[k]:.6f}.')
+                print(f'{k} is not improved from {self.best_metric[k]:.6f}.')
 
         # print('Saving current model...')
         # torch.save(data, os.path.join(self.save_dir, 'current.pth'))
@@ -163,8 +162,9 @@ class Trainer():
         for k in self.metric.keys():
             m = self.metric[k].value()
             self.metric[k].summary()
-            self.val_metric[k].append(m)
-            self.tsboard.update_metric('val', k, m, epoch)
+            if m is not None:
+                self.val_metric[k].append(m)
+                self.tsboard.update_metric('val', k, m, epoch)
 
     def train(self, train_dataloader, val_dataloader):
         for epoch in range(self.nepochs):
@@ -193,5 +193,7 @@ class Trainer():
                 if not self.debug:
                     # Get latest val loss here
                     val_loss = self.val_loss[-1]
-                    val_metric = {k: m[-1] for k, m in self.val_metric.items()}
+                    val_metric = {k: m[-1]
+                                  for k, m in self.val_metric.items()
+                                  if len(m) > 0}
                     self.save_checkpoint(epoch, val_loss, val_metric)

@@ -129,4 +129,5 @@ dmypy.json
 # data
 data/
 runs/
+visualization/confusion_matrix*
 *.pth

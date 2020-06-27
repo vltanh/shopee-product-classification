@@ -52,8 +52,12 @@ class ConfusionMatrix():
         return None
 
     def summary(self):
-        print('Confusion Matrix:')
-        print(self.cm)
+        df_cm = pd.DataFrame(self.cm, index=range(self.nclasses), columns=range(self.nclasses))
+        plt.figure(figsize = (10, 7))
+        sn.heatmap(df_cm, annot=True, cmap='YlGnBu')
+        plt.tight_layout()
+        np.save('visualization/confusion_matrix.npy', self.cm)
+        plt.savefig('visualization/confusion_matrix.png')
 
 
 class ClassificationReport():

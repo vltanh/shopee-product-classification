@@ -5,7 +5,7 @@ import torchvision.transforms as tvtf
 from tqdm import tqdm
 
 from datasets.shopee import ShopeeDataset
-from metrics.classification.accuracy import Accuracy
+from metrics.classification.accuracy import Accuracy, ConfusionMatrix
 from utils.getter import get_instance
 from utils.device import move_to
 
@@ -41,7 +41,8 @@ dataloader = DataLoader(dataset, batch_size=args.b)
 
 # Metrics
 metrics = {
-    'Accuracy': Accuracy()
+    'Accuracy': Accuracy(),
+    'ConfusionMatrix': ConfusionMatrix(nclasses=42),
 }
 
 with torch.no_grad():

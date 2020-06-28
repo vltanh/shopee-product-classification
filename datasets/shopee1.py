@@ -18,9 +18,7 @@ class ShopeeDataset1(data.Dataset):
 
         if is_train:
             self.transforms = tvtf.Compose([
-                tvtf.RandomResizedCrop(224),
-                tvtf.RandomHorizontalFlip(),
-                ImageNetPolicy(), 
+                tvtf.Resize((224, 224)),
                 tvtf.ToTensor(),
                 tvtf.Normalize(mean=[0.485, 0.456, 0.406],
                                std=[0.229, 0.224, 0.225]),

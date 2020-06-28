@@ -3,6 +3,7 @@ from torch.utils import data
 from PIL import Image
 
 from .autoaugment import ImageNetPolicy
+from .cutout import Cutout
 
 import csv
 import os
@@ -24,6 +25,7 @@ class ShopeeDataset1(data.Dataset):
                 tvtf.ToTensor(),
                 tvtf.Normalize(mean=[0.485, 0.456, 0.406],
                                std=[0.229, 0.224, 0.225]),
+                Cutout(n_holes=1, length=56),
             ])
         else:
             self.transforms = tvtf.Compose([

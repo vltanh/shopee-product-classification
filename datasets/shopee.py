@@ -3,7 +3,6 @@ from torch.utils import data
 from PIL import Image
 
 from .autoaugment import ImageNetPolicy
-from .cutout import Cutout
 
 import csv
 import os

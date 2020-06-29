@@ -23,7 +23,7 @@ parser.add_argument('-b', type=int, default=64,
 parser.add_argument('-c', type=str, default='',
                     help='raw csv file (default: empty)')
 parser.add_argument('-p', action='store_true',
-                    help='export confident field')
+                    help='export prob fields')
 parser.add_argument('-o', type=str, default='output.csv',
                     help='output file (default: output.csv)')
 args = parser.parse_args()
@@ -57,24 +57,23 @@ if args.c != '':
         list_img[row['filename']] = i
 
 with torch.no_grad():
+    fields = ['filename', 'category']
     if args.p:
-        out = [('filename', 'category', 'confidence')]
-    else:
-        out = [('filename', 'category')]
+        fields.extend([f'prob_{i:02d}' for i in range(42)])
+    out = [fields]
+
     model.eval()
     for i, (imgs, fns) in enumerate(tqdm(dataloader)):
         imgs = move_to(imgs, device)
         logits = model(imgs)
         probs = F.softmax(logits, dim=1)
-        confs, preds = torch.max(probs, dim=1)
-        if args.p:
-            for fn, pred, conf in zip(fns, preds, confs):
-                if args.c == '' or (fn in list_img):
-                    out.append((fn, f'{pred.item():02d}', conf.item()))
-        else:
-            for fn, pred in zip(fns, preds):
-                if args.c == '' or (fn in list_img):
-                    out.append((fn, f'{pred.item():02d}'))
+        preds = torch.argmax(probs, dim=1)
+        for fn, pred, _probs in zip(fns, preds, probs):
+            if args.c == '' or (fn in list_img):
+                row = [fn, f'{pred.item():02d}']
+                if args.p:
+                    row.extend([f'{prob:.3f}' for prob in _probs])
+                out.append(row)
 
     if args.c != '':
         out[1:] = sorted(out[1:], key=lambda x: list_img[x[0]])

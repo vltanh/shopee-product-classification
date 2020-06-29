@@ -127,6 +127,7 @@ dmypy.json
 .vscode/
 
 # data
+csv/
 data/
 runs/
 visualization/confusion_matrix*
